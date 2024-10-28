@@ -16,7 +16,7 @@ COPY ./api/ ./
 # Exposer le port (par exemple 3000)
 EXPOSE 3000
 
-RUN npm run build
+RUN npm start
 
 ENV TZ=Europe/Paris
 

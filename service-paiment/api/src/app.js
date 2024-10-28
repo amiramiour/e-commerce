@@ -8,5 +8,3 @@ const app = express();
 connectDB();
 configureServices(app);
 startServeur(app);
-
-export default app;

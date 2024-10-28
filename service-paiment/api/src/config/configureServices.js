@@ -1,8 +1,8 @@
-import express, { Application } from 'express';
-import swaggerUi from 'swagger-ui-express';
-import configSwagger from '../config/swagger-config';
+const express = require('express');
+const  swaggerUi = require('swagger-ui-express');
+const configSwagger =  require('../config/swagger-config');
 
-const configureServices = () => {
+const configureServices = (app) => {
   // Swagger documentation route
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(configSwagger));
 
@@ -11,4 +11,4 @@ const configureServices = () => {
   app.use(express.json());
 };
 
-export default configureServices;
+module.exports = configureServices;

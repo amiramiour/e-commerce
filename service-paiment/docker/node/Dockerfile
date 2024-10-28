@@ -2,7 +2,7 @@
 FROM node:20.17-slim
 
 # Créer un dossier de travail
-WORKDIR /home/node/app/api/
+WORKDIR /home/node/app/api
 
 # Copier le package.json et package-lock.json
 COPY ./api/package.json ./
@@ -16,7 +16,7 @@ COPY ./api/ ./
 # Exposer le port (par exemple 3000)
 EXPOSE 3000
 
-RUN npm start
+# RUN npm start
 
 ENV TZ=Europe/Paris
 

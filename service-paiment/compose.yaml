@@ -28,16 +28,18 @@ services:
       - ./db:/var/lib/mysql
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  phpmyadmin: 
-    image: phpmyadmin/phpmyadmin 
-    container_name: phpmyadmin 
-    environment: 
+  pma:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8081:80'
+    restart: always
+    depends_on:
+      - db
+    environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} 
-    ports: 
-      - "8081:80" 
-    depends_on: 
-      - db 
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      PMA_ARBITRARY: 1
 
   app: 
     build: 

@@ -1,19 +1,22 @@
-FROM node:20.17-slim AS builder 
+FROM node:20.17-slim AS builder
 
-WORKDIR /home/node/app 
+# Définir le répertoire de travail
+WORKDIR /home/node/app
 
-COPY ./api/package*.json ./ 
+# Copier le package.json et package-lock.json
+COPY ./api/package*.json ./
 
-RUN npm install --ignore-scripts 
+# Installer les dépendances (inclut devDependencies)
+RUN npm install
 
-COPY ./api . 
+# Copier le reste des fichiers de l'application
+COPY ./api ./
 
-RUN npm run build 
+# Construire l'application si nécessaire (décommente si tu as un script build)
+# RUN npm run build
 
-ENV TZ=Europe/Paris 
+# Exposer le port
+EXPOSE 3000
 
-EXPOSE 3000 
-
-USER node 
-
-CMD ["npm", "run", "dev"] 
+# Démarrer l'application
+CMD ["npx", "nodemon", "app.js"]

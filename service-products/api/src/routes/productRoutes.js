@@ -141,11 +141,39 @@ const productController = require('../controllers/productController');
  *       500:
  *         description: Erreur serveur
  */
+/**
+ * @swagger
+ * /api/products/{id}/similar:
+ *   get:
+ *     summary: Récupère des produits similaires
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID du produit pour lequel récupérer des produits similaires
+ *     responses:
+ *       200:
+ *         description: Liste de produits similaires
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Produit non trouvé
+ *       500:
+ *         description: Erreur serveur
+ */
 
 // Product routes
 router.get('/', productController.getAllProducts);
 router.post('/', productController.createProduct);
 router.put('/:id', productController.updateProduct);
 router.delete('/:id', productController.deleteProduct);
+router.get('/:id/similar', productController.getSimilarProducts); 
 
 module.exports = router;

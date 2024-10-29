@@ -13,7 +13,7 @@ RUN npm run
 
 ENV TZ=Europe/Paris 
 
-EXPOSE 3000 
+EXPOSE 3002
 
 USER node 
 

@@ -32,22 +32,7 @@ services:
       - ./db:/var/lib/mysql
       # - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql  # Utiliser si tu as un script d'initialisation
 
-  db_test:
-    image: mysql:8.0
-    restart: always
-    healthcheck:
-      interval: 30s
-      retries: 3
-      test: ["CMD", "mysqladmin", "ping", "-h", "db"]  # Utiliser le nom du service 'db'
-      timeout: 30s
-    environment:
-      MYSQL_DATABASE: ${TEST_DB_NAME}
-      MYSQL_USER: ${TEST_DB_USER}
-      MYSQL_PASSWORD: ${TEST_DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${TEST_DB_PASSWORD}  # Utilisé pour le mot de passe root
-    volumes:
-      - ./db_test:/var/lib/mysql
-      # - ./sql/test.sql:/docker-entrypoint-initdb.d/test.sql  # Utiliser si tu as un script d'initialisation
+  
 
   pma:
     image: phpmyadmin/phpmyadmin

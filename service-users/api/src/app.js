@@ -3,13 +3,19 @@ const bodyParser = require('body-parser');
 const userRoutes = require('./routes/userRoutes');
 const { connectDB } = require('./config/db');
 
+const swaggerUi = require('swagger-ui-express');
+const configSwagger = require('./config/swagger-config');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json()); // Pour parser le JSON dans le corps de la requête
+app.use(bodyParser.json());
 
 // Utiliser les routes
 app.use('/api/users', userRoutes);
+
+// Documenter l'API avec Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(configSwagger.swaggerSpec));
 
 const initializeApp = async () => {
   try {

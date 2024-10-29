@@ -7,8 +7,8 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-/service-products/db
-/service-products/db_test
+/*/db
+/*/db_test
 
 
 .env 

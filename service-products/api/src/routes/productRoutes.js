@@ -13,6 +13,7 @@ const productController = require('../controllers/productController');
  *         - price
  *         - category_id
  *         - size_id
+ *         - color_id
  *       properties:
  *         id:
  *           type: integer
@@ -30,6 +31,9 @@ const productController = require('../controllers/productController');
  *         size_id:
  *           type: integer
  *           description: ID de la taille
+ *         color_id:
+ *           type: integer
+ *           description: ID de la couleur
  *         availability:
  *           type: boolean
  *           description: Disponibilité du produit
@@ -41,6 +45,7 @@ const productController = require('../controllers/productController');
  *         price: 19.99
  *         category_id: 1
  *         size_id: 2
+ *         color_id: 3
  *         availability: true
  *         stock: 100
  */

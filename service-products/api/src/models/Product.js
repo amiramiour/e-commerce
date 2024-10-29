@@ -1,3 +1,4 @@
+// models/Product.js
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
@@ -7,6 +8,7 @@ module.exports = (sequelize) => {
         price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
         category_id: { type: DataTypes.INTEGER, allowNull: false },
         size_id: { type: DataTypes.INTEGER, allowNull: false },
+        color_id: { type: DataTypes.INTEGER, allowNull: false },
         availability: { type: DataTypes.BOOLEAN, defaultValue: true },
         stock: { type: DataTypes.INTEGER, defaultValue: 0 },
         createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },

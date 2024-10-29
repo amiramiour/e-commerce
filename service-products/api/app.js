@@ -4,6 +4,7 @@ const { sequelize } = require('./src/models');
 const productRoutes = require('./src/routes/productRoutes');
 const categoryRoutes = require('./src/routes/categoryRoutes');
 const sizeRoutes = require('./src/routes/sizeRoutes');
+const colorRoutes = require('./src/routes/colorRoutes');
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/sizes', sizeRoutes);
+app.use('/api/colors', colorRoutes);
 
 // Sync models with the database and start the server
 sequelize.sync({ force: true })

@@ -1,5 +1,5 @@
 const express = require('express');
-const { swaggerDocs, swaggerUi } = require('./swagger');
+const { swaggerDocs, swaggerUi } = require('./config/swagger');
 const { sequelize } = require('./src/models');
 const productRoutes = require('./src/routes/productRoutes');
 const categoryRoutes = require('./src/routes/categoryRoutes');

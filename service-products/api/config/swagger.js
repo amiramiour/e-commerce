@@ -18,7 +18,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./src/routes/*.js'], // Chemin vers les fichiers de route pour générer la documentation automatiquement
+    apis: ['./docs/*.js'], // Chemin vers les fichiers de route pour générer la documentation automatiquement
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);

@@ -8,7 +8,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 /service-products/db
-/db_test
+/service-products/db_test
 
 
 .env 

@@ -1,6 +1,7 @@
 const express = require('express');
 const { sequelize } = require('./src/models');
 const productRoutes = require('./src/routes/productRoutes');
+const categoryRoutes = require('./src/routes/categoryRoutes');
 
 const app = express();
 app.use(express.json());

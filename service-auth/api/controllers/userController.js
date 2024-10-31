@@ -1,4 +1,4 @@
-const User = require("../models/userModel.js");
+const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 require('dotenv').config();
@@ -30,6 +30,7 @@ exports.userRegister = async (req, res) => {
             res.status(401).json({message: "Un compte est déjà lié à cet email."});
         }
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Une erreur est survenue lors de la création de votre compte.', err });
     }
 }

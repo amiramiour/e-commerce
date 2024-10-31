@@ -1,12 +1,12 @@
 const express = require('express');
 const request = require('supertest');
 const User = require("../models/userModel.js");
-const database = require('../config/database');
+const { connectDB } = require('../config/database');
 
 const app = express();
 
 beforeAll(async () => {
-    database.authenticate()
+    connectDB();
 
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());

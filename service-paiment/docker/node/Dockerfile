@@ -14,7 +14,7 @@ RUN npm install --ignore-scripts
 COPY ./api/ ./
 
 # Exposer le port (par exemple 3000)
-EXPOSE 3000
+EXPOSE 3010
 
 # RUN npm start
 

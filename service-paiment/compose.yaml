@@ -25,8 +25,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_RANDOM_ROOT_PASSWORD: yes
     volumes:
-      - ./db:/var/lib/mysql
-    #  - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db:/var/lib/db
 
   pma:
     image: phpmyadmin/phpmyadmin
@@ -49,7 +48,7 @@ services:
     volumes: 
       - ./api:/home/node/app/api 
     ports: 
-      - "3000:3000" 
+      - "3010:3010" 
     depends_on: 
       - db 
     env_file: 

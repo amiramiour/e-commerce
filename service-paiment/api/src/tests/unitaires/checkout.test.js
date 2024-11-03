@@ -1,7 +1,6 @@
 const supertest = require('supertest');
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const checkoutController = require('../../controllers/checkoutController');
 const configureServices = require('../../config/configureServices');
 const dotenv = require('dotenv');
 const connectDb = require('../../config/connectDb');

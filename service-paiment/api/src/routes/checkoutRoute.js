@@ -5,3 +5,5 @@ const jwtMiddleware = require('../middleware/jwtMiddleware');
 const router = Router();
 
 router.post('/create-checkout-session', jwtMiddleware.verifyToken, checkoutController.createCheckout);
+
+module.exports = router;

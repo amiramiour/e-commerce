@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
-export const createCheckout = async (req, res) => {
+exports.createCheckout = async (req, res) => {
     try {
         const products = req.body.products;
 

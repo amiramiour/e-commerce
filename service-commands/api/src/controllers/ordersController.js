@@ -1,11 +1,19 @@
 // api/src/controllers/ordersController.js
 
+const { createOrder } = require('../models/orderModel'); // Importe le modèle de commandes
+
 // Fonction pour créer une nouvelle commande
-const createOrder = (req, res) => {
-  const { product_id, quantity, total_price } = req.body;
-  // Logique pour créer la commande dans la base de données (à ajouter plus tard)
-  res.status(201).json({ message: 'Commande créée avec succès', data: { product_id, quantity, total_price } });
+const createOrderController = (req, res) => {
+  const orderData = req.body;
+
+  createOrder(orderData, (err, result) => {
+    if (err) {
+      console.error('Erreur lors de la création de la commande:', err);
+      return res.status(500).json({ message: 'Erreur lors de la création de la commande', error: err });
+    }
+    res.status(201).json({ message: 'Commande créée avec succès', data: result });
+  });
 };
 
 // Exporter le contrôleur
-module.exports = { createOrder };
+module.exports = { createOrderController };

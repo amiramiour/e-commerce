@@ -1,9 +1,15 @@
+// api/src/app.js
+
 require('dotenv').config();
 const express = require('express');
 const app = express();
 
 // Middleware pour parser le JSON
 app.use(express.json());
+
+// Importer et utiliser la route des commandes
+const ordersRoutes = require('./routes/ordersRoutes');
+app.use('/api', ordersRoutes);
 
 // Route de test
 app.get('/', (req, res) => {

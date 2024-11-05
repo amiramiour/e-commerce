@@ -2,10 +2,10 @@
 
 const express = require('express');
 const router = express.Router();
-const { createOrder } = require('../controllers/ordersController');
+const { createOrderController } = require('../controllers/ordersController'); // Vérifie l'importation ici
 
 // Route pour créer une nouvelle commande
-router.post('/orders', createOrder);
+router.post('/orders', createOrderController);
 
 // Exporter le routeur
 module.exports = router;

@@ -23,6 +23,8 @@ services:
       - db
     env_file:
       - .env
+    restart: always
+    entrypoint: ["sh", "-c", "while ! nc -z db 3306; do sleep 1; done; node api/src/app.js"]
 
 volumes:
   mysql_data:

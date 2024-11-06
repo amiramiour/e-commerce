@@ -1,6 +1,9 @@
 # Étape 1 : Utiliser une image de base Node.js
 FROM node:14
 
+# Met à jour le système et installe netcat
+RUN apt-get update && apt-get install -y netcat
+
 # Étape 2 : Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 

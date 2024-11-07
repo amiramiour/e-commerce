@@ -1,68 +1,64 @@
-//controllers/userController.js
-const User = require('../models/user');
+// controllers/userController.js
 
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const argon2 = require('argon2');
+
+// Créer un nouvel utilisateur
 exports.createUser = async (req, res) => {
     try {
-      // Création de l'utilisateur, le mot de passe est automatiquement haché dans le modèle
-      const user = await User.create(req.body);
-      res.status(201).json(user);
+        const user = await User.create(req.body);
+        res.status(201).json(user);
     } catch (error) {
-      console.error('Error creating user:', error);
-      res.status(500).json({ error: 'Error creating user' });
+        console.error('Erreur lors de la création de l\'utilisateur :', error);
+        res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur' });
     }
 };
 
-exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.findAll();
-    res.status(200).json(users);
-  } catch (error) {
-    console.error('Error retrieving users:', error);
-    res.status(500).json({ error: 'Error retrieving users' });
-  }
-};
-
+// Récupérer les informations de l'utilisateur connecté
 exports.getUserById = async (req, res) => {
-  try {
-    const user = await User.findByPk(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+    try {
+        const user = await User.findByPk(req.user.id); // Utilise l'ID extrait du token
+        if (!user) {
+            return res.status(404).json({ error: 'Utilisateur non trouvé' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Erreur lors de la récupération de l\'utilisateur :', error);
+        res.status(500).json({ error: 'Erreur lors de la récupération de l\'utilisateur' });
     }
-    res.status(200).json(user);
-  } catch (error) {
-    console.error('Error retrieving user:', error);
-    res.status(500).json({ error: 'Error retrieving user' });
-  }
 };
 
+// Mettre à jour les informations de l'utilisateur connecté
 exports.updateUser = async (req, res) => {
-  try {
-    const [updated] = await User.update(req.body, {
-      where: { id: req.params.id },
-    });
-    if (!updated) {
-      return res.status(404).json({ error: 'User not found' });
+    try {
+        const [updated] = await User.update(req.body, {
+            where: { id: req.user.id }, // Utilise l'ID extrait du token
+        });
+        if (!updated) {
+            return res.status(404).json({ error: 'Utilisateur non trouvé' });
+        }
+        const updatedUser = await User.findByPk(req.user.id);
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour de l\'utilisateur :', error);
+        res.status(500).json({ error: 'Erreur lors de la mise à jour de l\'utilisateur' });
     }
-    const updatedUser = await User.findByPk(req.params.id);
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).json({ error: 'Error updating user' });
-  }
 };
 
-// Supprimer un utilisateur par ID
+// Supprimer l'utilisateur connecté
 exports.deleteUser = async (req, res) => {
-  try {
-    const deleted = await User.destroy({
-      where: { id: req.params.id },
-    });
-    if (!deleted) {
-      return res.status(404).json({ error: 'User not found' });
+    try {
+        const deleted = await User.destroy({
+            where: { id: req.user.id }, // Utilise l'ID extrait du token
+        });
+        if (!deleted) {
+            return res.status(404).json({ error: 'Utilisateur non trouvé' });
+        }
+        res.status(204).json(); // Pas de contenu
+    } catch (error) {
+        console.error('Erreur lors de la suppression de l\'utilisateur :', error);
+        res.status(500).json({ error: 'Erreur lors de la suppression de l\'utilisateur' });
     }
-    res.status(204).json(); // No content
-  } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).json({ error: 'Error deleting user' });
-  }
 };
+

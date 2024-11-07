@@ -1,7 +1,6 @@
-
 /**
  * @swagger
- * /api/users:
+ * /api/users/create:
  *   post:
  *     summary: Create a new user
  *     description: Register a new user with a hashed password
@@ -31,48 +30,52 @@
 
 /**
  * @swagger
- * /api/users:
- *   get:
- *     summary: Retrieve all users
- *     description: Get a list of all registered users
- *     responses:
- *       200:
- *         description: List of users
- *       500:
- *         description: Error retrieving users
- */
-
-/**
- * @swagger
- * /api/users/{id}:
- *   get:
- *     summary: Get a user by ID
- *     description: Retrieve user details by their ID
+ * /api/users/login:
+ *   post:
+ *     summary: Login to get a token
+ *     description: Authenticate a user and retrieve a token
  *     parameters:
- *       - in: path
- *         name: id
+ *       - in: body
+ *         name: credentials
  *         required: true
- *         type: integer
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
  *     responses:
  *       200:
- *         description: User found
- *       404:
- *         description: User not found
+ *         description: Successfully logged in, returns a token
+ *       401:
+ *         description: Invalid email or password
  *       500:
- *         description: Error retrieving user
+ *         description: Error during login
  */
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /api/users/profile:
+ *   get:
+ *     summary: Retrieve the currently logged-in user's profile
+ *     description: Get the details of the logged-in user based on the token
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *       403:
+ *         description: Unauthorized, invalid or missing token
+ *       500:
+ *         description: Error retrieving user profile
+ */
+
+/**
+ * @swagger
+ * /api/users/update:
  *   put:
- *     summary: Update a user by ID
- *     description: Update user details
+ *     summary: Update the currently logged-in user's details
+ *     description: Update user details based on the provided token
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         type: integer
  *       - in: body
  *         name: user
  *         required: true
@@ -92,29 +95,23 @@
  *     responses:
  *       200:
  *         description: User updated successfully
- *       404:
- *         description: User not found
+ *       403:
+ *         description: Unauthorized, invalid or missing token
  *       500:
  *         description: Error updating user
  */
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /api/users/delete:
  *   delete:
- *     summary: Delete a user by ID
- *     description: Remove a user from the database
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         type: integer
+ *     summary: Delete the currently logged-in user
+ *     description: Remove the user from the database based on the token
  *     responses:
  *       204:
  *         description: User deleted successfully
- *       404:
- *         description: User not found
+ *       403:
+ *         description: Unauthorized, invalid or missing token
  *       500:
  *         description: Error deleting user
  */
-

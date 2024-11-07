@@ -4,9 +4,16 @@ const connectDb = async () => {
     const isTestEnv = process.env.NODE_ENV === 'test';
     
     const dbName = isTestEnv ? process.env.DB_NAME_TEST : process.env.DB_NAME;
+    const dbUser = isTestEnv ? process.env.DB_USER_TEST : process.env.DB_USER;
+    const dbPassword = isTestEnv ? process.env.DB_PASSWORD_TEST : process.env.DB_PASSWORD;
+    const dbHost = isTestEnv ? process.env.DB_HOST_TEST : process.env.DB_HOST;
 
-    const db = new Sequelize(dbName, process.env.DB_USER, process.env.DB_PASSWORD, {
-        host: process.env.DB_HOST,
+    console.log('dbName: ', dbName);
+    console.log('dbUser: ', dbUser);
+    console.log('dbPassword', dbPassword);
+
+    const db = new Sequelize(dbName, dbUser, dbPassword, {
+        host: process.env.dbHost,
         dialect: process.env.DB_DIALECT,
         logging: (msg) => console.log(`SQL Query: ${msg}`)
     });

@@ -16,7 +16,8 @@ describe('Checkout controller', () => {
         await connectDb();
 
         //Génération du token
-        token = jwt.sign({ id: 1, role: 1 }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        console.log('process.env.JWT_KEY', process.env.JWT_KEY);
+        token = jwt.sign({ id: 1, role: 1 }, process.env.JWT_KEY, { expiresIn: '1h' });
     });
 
     describe('POST /create-checkout-session', () => {

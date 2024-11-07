@@ -1,20 +1,24 @@
 // api/src/models/orderModel.js
 
-const db = require('../config/db');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/connectDb');
 
-// Fonction pour insérer une nouvelle commande dans la base de données
-const createOrder = (orderData, callback) => {
-  const { product_id, quantity, total_price } = orderData;
-  const query = 'INSERT INTO orders (product_id, quantity, total_price) VALUES (?, ?, ?)';
+const Order = sequelize.define('Order', {
+    product_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    total_price: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+}, {
+    tableName: 'orders',
+    timestamps: false, // Désactive les colonnes createdAt et updatedAt automatiques
+});
 
-  db.query(query, [product_id, quantity, total_price], (err, result) => {
-    if (err) {
-      console.error('Erreur lors de l\'insertion de la commande dans la base de données:', err);
-      callback(err, null);
-    } else {
-      callback(null, result);
-    }
-  });
-};
-
-module.exports = { createOrder };
+module.exports = Order;

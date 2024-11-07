@@ -18,13 +18,24 @@ services:
       context: .
       dockerfile: docker/node/Dockerfile
     ports:
-      - "3000:3000"
+      - "3004:3004"
     depends_on:
       - db
     env_file:
       - .env
     restart: always
     entrypoint: ["sh", "-c", "while ! nc -z db 3306; do sleep 1; done; node api/src/app.js"]
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: user
+      PMA_PASSWORD: userpassword
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
 
 volumes:
   mysql_data:

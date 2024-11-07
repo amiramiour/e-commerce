@@ -1,39 +1,20 @@
-import AuthService from '../services/auth.service';
-
-/****************** REGISTER A USER ******************/
-/* 
-    This function allow a user to create an account
-
-    Checking :
-        - Check if the email isn't already in db
-        - The user can choice if he create a company account or student account
-
-*/
+const AuthService = require('../services/user.service');
+const { errorHandler } = require('../utils/error.util');
 
 exports.userRegister = async (req, res) => {
     try {
-        await AuthService.Register(req);
-        res.status(201).json({message: 'Votre compte a bien été créé.'});
+        await AuthService.Register(req.body);
+        res.status(201).json({ message: 'Votre compte a bien été créé.' });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Une erreur est survenue lors de la création de votre compte.', err });
+        errorHandler(err, res);
     }
-}
+};
 
-
-/****************** CONNECT A USER ******************/
-/* 
-    This function allow a user to connect him to his account
-
-    Checking :
-        - Check if the email and password is in db
-
-*/
 exports.userLogin = async (req, res) => {
     try {
-        const token = AuthService.Login(req);
-        res.status(201).json({ message: 'Connecté.', token });
+        const token = await AuthService.Login(req.body.email, req.body.password);
+        res.status(200).json({ message: 'Connecté.', token });
     } catch (err) {
-        res.status(500).json({ message: 'Erreur lors du traitement des données.', err });
+        errorHandler(err, res);
     }
-}
+};

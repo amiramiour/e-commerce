@@ -8,7 +8,7 @@ const configureServices = (app) => {
     app.use(express.json());
 
     // Ensuite, configure les routes
-    const userRoute = require('../routes/userRoute');
+    const userRoute = require('../routes/user.route');
     app.use('/users', userRoute);
 
     // Documentation API

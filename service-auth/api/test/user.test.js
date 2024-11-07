@@ -1,6 +1,6 @@
 const express = require('express');
 const request = require('supertest');
-const User = require("../models/userModel.js");
+const User = require("../models/user.model");
 const { connectDB } = require('../config/database');
 
 const app = express();
@@ -12,7 +12,7 @@ beforeAll(async () => {
     app.use(express.json());
 
     // User route
-    const userRoute = require('../routes/userRoute.js');
+    const userRoute = require('../routes/user.route');
     app.use('/users', userRoute);
 });
 
@@ -85,7 +85,7 @@ describe('All tests for user controller', () => {
             .send(testItem)
             .set('Accept', 'application/json');
 
-        expect(res.statusCode).toEqual(201);
+        expect(res.statusCode).toEqual(200);
     });
   });
 

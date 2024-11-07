@@ -1,28 +1,33 @@
-// middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
 
-exports.verifyToken = async (req, res, next) => {
-    if (req.originalUrl.includes('/create') || req.originalUrl === '/api/users/login') {
-        return next(); 
-    }
-
+// Fonction pour vérifier le token d'un utilisateur
+exports.verifyTokenUser = async (req, res, next) => {
     try {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1]; 
+        let token = req.headers['authorization'];
 
-        if (!token) {
-            return res.status(403).json({ message: "Accès interdit : token manquant" });
+        if (token) {
+            token = token.split(' ')[1];  // Prendre la partie après 'Bearer'
+            
+            const payload = await new Promise((resolve, reject) => {
+                jwt.verify(token, process.env.JWT_KEY, (error, decoded) => {
+                    if (error) {
+                        reject(error); 
+                    } else {
+                        resolve(decoded); 
+                    }
+                });
+            });
+
+            // Attacher le payload à la requête
+            req.user = payload;
+            next(); // Passer à la prochaine middleware ou handler
+        } else {
+            // Si aucun token n'est trouvé dans l'en-tête
+            return res.status(403).json({ message: "Accès interdit: token manquant" });
         }
-
-        const payload = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = payload; 
-
-        next();
     } catch (error) {
-        console.error("Erreur lors de la vérification du token :", error);
-        res.status(403).json({ message: "Accès interdit : token invalide" });
+        // Si le token est invalide ou une autre erreur survient
+        return res.status(403).json({ message: "Accès interdit: token invalide" });
     }
 };
-

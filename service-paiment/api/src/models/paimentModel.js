@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/connectDb'); 
+const {db} = require('../config/connectDb');
 
-const Paiment = sequelize.define('paiment', {
+const Paiment = db.define('paiment', {
     userId: {
         type: DataTypes.INTEGER,
         allowNull: false

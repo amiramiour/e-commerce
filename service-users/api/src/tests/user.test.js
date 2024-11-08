@@ -39,36 +39,6 @@ describe('User API', () => {
         await User.destroy({ where: {} });
     });
 
-    // Tests pour la création d'un utilisateur (POST /create)
-    describe('POST /create', () => {
-        it('should create a new user', async () => {
-            const email = `john.doe.${Math.random().toString(36).substring(7)}@example.com`;
-            const res = await request(app)
-                .post('/api/users/create')
-                .send({
-                    firstname: 'John',
-                    lastname: 'Doe',
-                    email: email,
-                    password: 'password123',
-                    role: true,
-                });
-
-            expect(res.statusCode).toEqual(201);
-            expect(res.body).toHaveProperty('id');
-        });
-
-        it('should return 400 if creating user with missing fields', async () => {
-            const res = await request(app)
-                .post('/api/users/create')
-                .send({
-                    firstname: 'Incomplete',
-                });
-
-            expect(res.statusCode).toEqual(400);
-            expect(res.body).toHaveProperty('error');
-        });
-    });
-
     // Tests pour l'accès au profil utilisateur (GET /profile)
     describe('GET /profile', () => {
         it('should retrieve the logged-in user profile', async () => {

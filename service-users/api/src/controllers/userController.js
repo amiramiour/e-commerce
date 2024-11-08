@@ -4,19 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const argon2 = require('argon2');
 
-// Créer un nouvel utilisateur
-exports.createUser = async (req, res) => {
-    try {
-        const user = await User.create(req.body);
-        res.status(201).json(user);
-    } catch (error) {
-        if (error.name === 'SequelizeValidationError') {
-            return res.status(400).json({ error: 'Erreur de validation: ' + error.message });
-        }
-        console.error('Erreur lors de la création de l\'utilisateur :', error);
-        res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur' });
-    }
-};
+
 
 // Récupérer les informations de l'utilisateur connecté
 exports.getUserById = async (req, res) => {

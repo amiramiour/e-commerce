@@ -1,6 +1,4 @@
-require('dotenv').config();
-
-const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
+const PaimentModel = require('../models/paimentModel');
 
 exports.createCheckout = async (req, res) => {
     try {
@@ -13,7 +11,7 @@ exports.createCheckout = async (req, res) => {
                     name: product.name,
                     description: product.description,
                 },
-                unit_amount: product.price * 100, // le prix est en centimes
+                unit_amount: product.price * 100, 
             },
             quantity: product.quantity,
         }));
@@ -24,6 +22,15 @@ exports.createCheckout = async (req, res) => {
             line_items: lineItems,
             success_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${req.headers.origin}/cancel`,
+        });
+
+        await PaimentModel.create({
+            userId: req.user.id,
+            sessionId: session.id,
+            status: 'created',
+            amount_total: session.amount_total,
+            currency: session.currency,
+            payment_method_types: session.payment_method_types.join(','),
         });
 
         res.status(200).json({ id: session.id });

@@ -2,8 +2,9 @@ const express = require('express');
 const  swaggerUi = require('swagger-ui-express');
 const configSwagger =  require('../config/swagger-config');
 const checkoutRoute = require('../routes/checkoutRoute');
+const Paiment = require('../models/paimentModel');
 
-const configureServices = (app) => {
+const configureServices = async(app) => {
   // Swagger documentation route
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(configSwagger));
 
@@ -13,6 +14,8 @@ const configureServices = (app) => {
 
   // Checkout route
   app.use('/', checkoutRoute);
+
+  await Paiment.sync();
 };
 
 module.exports = configureServices;

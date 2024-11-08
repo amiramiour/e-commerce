@@ -3,7 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const configureServices = require('../config/configureServices');
 const dotenv = require('dotenv');
-const { connectDb, sequelize } = require('../config/connectDb');
+const { connectDB, db } = require('../config/connectDb');
 const PaimentModel = require('../models/paimentModel');
 dotenv.config()
 
@@ -14,16 +14,16 @@ describe('Checkout controller', () => {
 
     beforeAll(async() => {
         configureServices(app);
-        await connectDb();
-        await sequelize.destroyAll();
+        await connectDB();
+        await db.sync({ force: true });
 
         //Génération du token
         token = jwt.sign({ id: 1, role: 1 }, process.env.JWT_KEY, { expiresIn: '1h' });
     });
 
     afterAll(async () => {
-        await sequelize.destroyAll();
-        await sequelize.close();
+        await db.sync({ force: true });
+        await db.close();
     });
 
     describe('POST /create-checkout-session', () => {

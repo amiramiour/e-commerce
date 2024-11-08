@@ -9,6 +9,12 @@ exports.Register = async (userData) => {
     const checkEmail = await User.findOne({ where: { email: userData.email } });
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    for (const [key, value] of Object.entries(userData)) {
+        if (!value || value.trim() === '') {
+            throw new AppError(400, `Le champ ${key} est vide`);
+        }
+    }
+
     if (!regexEmail.test(userData.email))
         throw new AppError(400, errorMessages.INVALID_EMAIL_FORMAT);
 

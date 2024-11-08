@@ -77,6 +77,24 @@ describe('All tests for user controller', () => {
     });
   });
 
+  describe('POST /users/register with empty informations', () => {
+    it('should return an error', async () => {
+        const testItem = { 
+            firstname: "Max", 
+            lastname: "Richet", 
+            email: "        ", 
+            password: "",
+            role: "0"
+        }
+        const res = await request(app)
+            .post('/users/register')
+            .send(testItem)
+            .set('Accept', 'application/json');
+
+        expect(res.statusCode).toEqual(400);
+    });
+  });
+
   describe('POST /users/login', () => {
     it('should connect to an account', async () => {
         const testItem = { email: "maxrichet78@gmail.com", password: "123456" }

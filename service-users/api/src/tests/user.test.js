@@ -11,18 +11,19 @@ const app = express();
 app.use(bodyParser.json());
 app.use('/api/users', userRoutes);
 
-let token; 
+let token;
+let invalidToken = 'Bearer invalidtoken';
 
 beforeAll(async () => {
     await connectDB();
-    await User.destroy({ where: {} }); 
+    await User.destroy({ where: {} });
 
     const email = `john.doe.${Math.random().toString(36).substring(7)}@example.com`;
     const user = await User.create({
         firstname: 'John',
         lastname: 'Doe',
         email: email,
-        password: await argon2.hash('password123'), 
+        password: await argon2.hash('password123'),
         role: true,
     });
 
@@ -54,18 +55,45 @@ describe('User API', () => {
         expect(res.body).toHaveProperty('id');
     });
 
+    it('should return 400 if creating user with missing fields', async () => {
+        const res = await request(app)
+            .post('/api/users/create')
+            .send({
+                firstname: 'Incomplete',
+            });
+
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('error');
+    });
+
     it('should retrieve the logged-in user profile', async () => {
         const res = await request(app)
             .get('/api/users/profile')
-            .set('Authorization', `Bearer ${token}`); 
+            .set('Authorization', `Bearer ${token}`);
+        
         expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty('id');
+    });
+
+    it('should return 401 if profile is accessed without a token', async () => {
+        const res = await request(app)
+            .get('/api/users/profile');
+
+        expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 for profile access with an invalid token', async () => {
+        const res = await request(app)
+            .get('/api/users/profile')
+            .set('Authorization', invalidToken);
+        
+        expect(res.statusCode).toEqual(403);
     });
 
     it('should update the logged-in user profile', async () => {
         const res = await request(app)
             .put('/api/users/update')
-            .set('Authorization', `Bearer ${token}`) // Authentification avec le token
+            .set('Authorization', `Bearer ${token}`)
             .send({
                 firstname: 'Jane',
                 lastname: 'Doe',
@@ -78,10 +106,51 @@ describe('User API', () => {
         expect(res.body).toHaveProperty('id');
     });
 
+    it('should return 400 if updating profile with invalid data', async () => {
+        const res = await request(app)
+            .put('/api/users/update')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                email: 'notanemail'
+            });
+
+        expect(res.statusCode).toEqual(400);
+    });
+
+    it('should return 401 if updating profile without a token', async () => {
+        const res = await request(app)
+            .put('/api/users/update')
+            .send({
+                firstname: 'Jane',
+                lastname: 'Doe',
+                email: 'jane.doe@example.com',
+                password: 'newpassword123',
+                role: false,
+            });
+
+        expect(res.statusCode).toEqual(401);
+    });
+
     it('should delete the logged-in user', async () => {
         const res = await request(app)
             .delete('/api/users/delete')
-            .set('Authorization', `Bearer ${token}`); 
+            .set('Authorization', `Bearer ${token}`);
+        
         expect(res.statusCode).toEqual(204);
+    });
+
+    it('should return 401 if deleting a user without a token', async () => {
+        const res = await request(app)
+            .delete('/api/users/delete');
+        
+        expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if deleting user with an invalid token', async () => {
+        const res = await request(app)
+            .delete('/api/users/delete')
+            .set('Authorization', invalidToken);
+        
+        expect(res.statusCode).toEqual(403);
     });
 });

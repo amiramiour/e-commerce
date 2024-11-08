@@ -24,7 +24,7 @@ exports.verifyTokenUser = async (req, res, next) => {
             next(); // Passer à la prochaine middleware ou handler
         } else {
             // Si aucun token n'est trouvé dans l'en-tête
-            return res.status(403).json({ message: "Accès interdit: token manquant" });
+            return res.status(401).json({ message: "Accès interdit: token manquant" });
         }
     } catch (error) {
         // Si le token est invalide ou une autre erreur survient

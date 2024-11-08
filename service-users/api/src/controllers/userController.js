@@ -10,6 +10,9 @@ exports.createUser = async (req, res) => {
         const user = await User.create(req.body);
         res.status(201).json(user);
     } catch (error) {
+        if (error.name === 'SequelizeValidationError') {
+            return res.status(400).json({ error: 'Erreur de validation: ' + error.message });
+        }
         console.error('Erreur lors de la création de l\'utilisateur :', error);
         res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur' });
     }
@@ -41,6 +44,9 @@ exports.updateUser = async (req, res) => {
         const updatedUser = await User.findByPk(req.user.id);
         res.status(200).json(updatedUser);
     } catch (error) {
+        if (error.name === 'SequelizeValidationError') {
+            return res.status(400).json({ error: 'Erreur de validation: ' + error.message });
+        }
         console.error('Erreur lors de la mise à jour de l\'utilisateur :', error);
         res.status(500).json({ error: 'Erreur lors de la mise à jour de l\'utilisateur' });
     }

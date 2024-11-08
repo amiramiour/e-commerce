@@ -4,23 +4,27 @@ dotenv.config();
 
 exports.verifyToken = async (req, res, next)=> {
     try {
-        const token = req.headers['authorization'];
+        let token = req.headers['authorization'];
 
         if (token) {
-            const payload = await new Promise<any>((resolve, reject) => {
+            token = token.split(' ')[1];  // Prendre la partie après 'Bearer'
+            
+            const payload = await new Promise((resolve, reject) => {
                 jwt.verify(token, process.env.JWT_KEY, (error, decoded) => {
                     if (error) {
-                        reject(error);
+                        reject(error); 
                     } else {
-                        resolve(decoded);
+                        resolve(decoded); 
                     }
                 });
             });
 
-            req.user = payload; 
-            next();
+            // Attacher le payload à la requête
+            req.user = payload;
+            next(); // Passer à la prochaine middleware ou handler
         } else {
-            res.status(403).json({ message: "Accès interdit: token manquant" });
+            // Si aucun token n'est trouvé dans l'en-tête
+            return res.status(401).json({ message: "Accès interdit: token manquant" });
         }
     } catch (error) {
         console.error(error); 

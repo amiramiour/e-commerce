@@ -1,29 +1,29 @@
-const Sequelize = require('sequelize');
+require('dotenv').config();
+const { Sequelize } = require('sequelize');
 
-const connectDb = async () => {
-    const isTestEnv = process.env.NODE_ENV === 'test';
-    
-    const dbName = isTestEnv ? process.env.DB_NAME_TEST : process.env.DB_NAME;
-    const dbUser = isTestEnv ? process.env.DB_USER_TEST : process.env.DB_USER;
-    const dbPassword = isTestEnv ? process.env.DB_PASSWORD_TEST : process.env.DB_PASSWORD;
-    const dbHost = isTestEnv ? process.env.DB_HOST_TEST : process.env.DB_HOST;
+const database = process.env.NODE_ENV === 'test' ? process.env.DB_NAME_TEST : process.env.DB_NAME;
 
-    console.log('dbName: ', dbName);
-    console.log('dbUser: ', dbUser);
-    console.log('dbPassword', dbPassword);
-
-    const db = new Sequelize(dbName, dbUser, dbPassword, {
-        host: process.env.dbHost,
+const sequelize = new Sequelize(
+    database,                  
+    process.env.DB_USER,       
+    process.env.DB_PASSWORD,   
+    {
+        host: process.env.DB_HOST, 
         dialect: process.env.DB_DIALECT,
-        logging: (msg) => console.log(`SQL Query: ${msg}`)
-    });
-
-    try {
-        await db.authenticate();
-        console.log('Connection to the database has been established successfully.');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
+        port: 3306,
     }
+);
+
+const connectDB = async () => {
+    try {
+        await sequelize.authenticate();
+        await sequelize.sync();
+        console.log(`Connexion à la base de données ${database} réussie.`);
+    } catch (error) {
+        console.error('Impossible de se connecter à la base de données:', error);
+    }
+
+    return sequelize; 
 };
 
-module.exports = connectDb;
+module.exports = { connectDB, sequelize };

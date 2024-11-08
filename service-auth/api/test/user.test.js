@@ -55,7 +55,7 @@ describe('All tests for user controller', () => {
             .send(testItem)
             .set('Accept', 'application/json');
 
-        expect(res.statusCode).toEqual(401);
+        expect(res.statusCode).toEqual(409);
     });
   });
 
@@ -73,7 +73,7 @@ describe('All tests for user controller', () => {
             .send(testItem)
             .set('Accept', 'application/json');
 
-        expect(res.statusCode).toEqual(409);
+        expect(res.statusCode).toEqual(400);
     });
   });
 

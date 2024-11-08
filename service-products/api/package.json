@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
-    "test": "NODE_ENV=test jest --detectOpenHandles",
+    "test": "set NODE_ENV=test&& npx jest --detectOpenHandles",
     "build": "npm install --production"
   },
   "author": "",

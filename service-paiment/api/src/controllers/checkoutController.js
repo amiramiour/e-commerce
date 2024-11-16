@@ -1,10 +1,12 @@
-const PaimentModel = require('../models/paimentModel');
+const Paiment = require('../models/paimentModel');
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
 exports.createCheckout = async (req, res) => {
     try {
         const products = req.body.products;
 
-        const lineItems = products.map(product => ({
+        const lineItems = products.map(product => ( 
+            {
             price_data: {
                 currency: 'eur', 
                 product_data: {
@@ -16,6 +18,8 @@ exports.createCheckout = async (req, res) => {
             quantity: product.quantity,
         }));
 
+        console.log(lineItems);
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',
@@ -24,7 +28,7 @@ exports.createCheckout = async (req, res) => {
             cancel_url: `${req.headers.origin}/cancel`,
         });
 
-        await PaimentModel.create({
+        await Paiment.create({
             userId: req.user.id,
             sessionId: session.id,
             status: 'created',

@@ -1,8 +1,9 @@
-const Router = require('express');
+const express = require('express');
 const checkoutController = require('../controllers/checkoutController');
 
-const router = Router();
+const router = express.Router();
 
 router.post('/create-checkout-session', checkoutController.createCheckout);
+router.post('/webhook', express.raw({ type: 'application/json' }), checkoutController.manageWebhook);
 
 module.exports = router;

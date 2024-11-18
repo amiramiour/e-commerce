@@ -1,5 +1,4 @@
 const { DataTypes } = require('sequelize');
-const argon2 = require('argon2'); // Importer bcrypt pour le hachage
 const { sequelize } = require('../config/db'); // Importer l'instance de sequelize
 
 const User = sequelize.define('User', {
@@ -31,10 +30,6 @@ const User = sequelize.define('User', {
 }, {
   tableName: 'users', 
   timestamps: true, 
-});
-
-User.beforeCreate(async (user) => {
-  user.password = await argon2.hash(user.password, 10);
 });
 
 const sync = async () => {

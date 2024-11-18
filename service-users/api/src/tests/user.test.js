@@ -1,19 +1,16 @@
 const request = require('supertest');
 const express = require('express');
 const bodyParser = require('body-parser');
-const userRoutes = require('../routes/userRoutes'); // Assurez-vous que le chemin est correct
-const { connectDB } = require('../config/db'); // Modifier selon le chemin de votre config DB
+const userRoutes = require('../routes/userRoutes'); 
+const { connectDB } = require('../config/db'); 
 const User = require('../models/user');
-const jwt = require('jsonwebtoken');
-const argon2 = require('argon2');
 
 const app = express();
 app.use(bodyParser.json());
 app.use('/api/users', userRoutes);
 
 describe('User API', () => {
-    let token;
-    let invalidToken = 'Bearer invalidtoken';
+    let userId;
 
     beforeAll(async () => {
         await connectDB();
@@ -24,54 +21,45 @@ describe('User API', () => {
             firstname: 'John',
             lastname: 'Doe',
             email: email,
-            password: await argon2.hash('password123'),
+            password: 'password123',
             role: true,
         });
 
-        token = jwt.sign(
-            { id: user.id, role: user.role },
-            process.env.JWT_KEY,
-            { expiresIn: '1h' }
-        );
+        userId = user.id;
+        console.log('User created with ID:', userId); // Log pour vérifier l'ID de l'utilisateur
     });
 
     afterAll(async () => {
         await User.destroy({ where: {} });
     });
 
-    // Tests pour l'accès au profil utilisateur (GET /profile)
-    describe('GET /profile', () => {
-        it('should retrieve the logged-in user profile', async () => {
+    describe('GET /profile/:id', () => {
+        it('should retrieve the user profile by ID', async () => {
             const res = await request(app)
-                .get('/api/users/profile')
-                .set('Authorization', `Bearer ${token}`);
+                .get(`/api/users/profile/${userId}`);
             
+            console.log('Response status:', res.statusCode); // Log pour vérifier le statut de la réponse
+            console.log('Response body:', res.body); // Log pour vérifier le corps de la réponse
+
             expect(res.statusCode).toEqual(200);
             expect(res.body).toHaveProperty('id');
+            expect(res.body).toHaveProperty('firstname', 'John');
+            expect(res.body).toHaveProperty('lastname', 'Doe');
+            expect(res.body).toHaveProperty('email');
         });
 
-        it('should return 401 if profile is accessed without a token', async () => {
+        it('should return 404 if user profile is not found', async () => {
             const res = await request(app)
-                .get('/api/users/profile');
-
-            expect(res.statusCode).toEqual(401);
-        });
-
-        it('should return 403 for profile access with an invalid token', async () => {
-            const res = await request(app)
-                .get('/api/users/profile')
-                .set('Authorization', invalidToken);
+                .get('/api/users/profile/999999');
             
-            expect(res.statusCode).toEqual(403);
+            expect(res.statusCode).toEqual(404);
         });
     });
 
-    // Tests pour la mise à jour du profil utilisateur (PUT /update)
-    describe('PUT /update', () => {
-        it('should update the logged-in user profile', async () => {
+    describe('PUT /update/:id', () => {
+        it('should update the user profile by ID', async () => {
             const res = await request(app)
-                .put('/api/users/update')
-                .set('Authorization', `Bearer ${token}`)
+                .put(`/api/users/update/${userId}`)
                 .send({
                     firstname: 'Jane',
                     lastname: 'Doe',
@@ -82,12 +70,14 @@ describe('User API', () => {
 
             expect(res.statusCode).toEqual(200);
             expect(res.body).toHaveProperty('id');
+            expect(res.body).toHaveProperty('firstname', 'Jane');
+            expect(res.body).toHaveProperty('lastname', 'Doe');
+            expect(res.body).toHaveProperty('email', 'jane.doe@example.com');
         });
 
         it('should return 400 if updating profile with invalid data', async () => {
             const res = await request(app)
-                .put('/api/users/update')
-                .set('Authorization', `Bearer ${token}`)
+                .put(`/api/users/update/${userId}`)
                 .send({
                     email: 'notanemail'
                 });
@@ -95,9 +85,9 @@ describe('User API', () => {
             expect(res.statusCode).toEqual(400);
         });
 
-        it('should return 401 if updating profile without a token', async () => {
+        it('should return 404 if updating profile for non-existent user', async () => {
             const res = await request(app)
-                .put('/api/users/update')
+                .put('/api/users/update/999999')
                 .send({
                     firstname: 'Jane',
                     lastname: 'Doe',
@@ -106,33 +96,40 @@ describe('User API', () => {
                     role: false,
                 });
 
-            expect(res.statusCode).toEqual(401);
+            expect(res.statusCode).toEqual(404);
+        });
+
+        it('should partially update the user profile by ID', async () => {
+            const res = await request(app)
+                .put(`/api/users/update/${userId}`)
+                .send({
+                    firstname: 'Janet'
+                });
+
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty('id');
+            expect(res.body).toHaveProperty('firstname', 'Janet');
         });
     });
 
-    // Tests pour la suppression de l'utilisateur (DELETE /delete)
-    describe('DELETE /delete', () => {
-        it('should delete the logged-in user', async () => {
+    describe('DELETE /delete/:id', () => {
+        it('should delete the user by ID', async () => {
             const res = await request(app)
-                .delete('/api/users/delete')
-                .set('Authorization', `Bearer ${token}`);
+                .delete(`/api/users/delete/${userId}`);
             
             expect(res.statusCode).toEqual(204);
+
+            // Vérifier que l'utilisateur n'existe plus
+            const checkRes = await request(app)
+                .get(`/api/users/profile/${userId}`);
+            expect(checkRes.statusCode).toEqual(404);
         });
 
-        it('should return 401 if deleting a user without a token', async () => {
+        it('should return 404 if deleting a non-existent user', async () => {
             const res = await request(app)
-                .delete('/api/users/delete');
+                .delete('/api/users/delete/999999');
             
-            expect(res.statusCode).toEqual(401);
-        });
-
-        it('should return 403 if deleting user with an invalid token', async () => {
-            const res = await request(app)
-                .delete('/api/users/delete')
-                .set('Authorization', invalidToken);
-            
-            expect(res.statusCode).toEqual(403);
+            expect(res.statusCode).toEqual(404);
         });
     });
 });

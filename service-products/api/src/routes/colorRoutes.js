@@ -2,15 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const colorController = require('../controllers/ColorController');
-const jwtMiddleware = require('../../middleware/jwtMiddleware'); // Chemin vers le middleware JWT
 
-
-
-// Routes pour les couleurs avec authentification
-router.get('/', jwtMiddleware.verifyToken, colorController.getAllColors); // Protège cette route
-router.post('/', jwtMiddleware.verifyToken, colorController.createColor); // Protège cette route
-router.put('/:id', jwtMiddleware.verifyToken, colorController.updateColor); // Protège cette route
-router.delete('/:id', jwtMiddleware.verifyToken, colorController.deleteColor); // Protège cette route
-
+// Routes pour les couleurs
+router.get('/', colorController.getAllColors); // Route publique
+router.post('/', colorController.createColor); // Route publique
+router.put('/:id', colorController.updateColor); // Route publique
+router.delete('/:id', colorController.deleteColor); // Route publique
 
 module.exports = router;

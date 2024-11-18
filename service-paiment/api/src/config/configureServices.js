@@ -12,6 +12,14 @@ const configureServices = async(app) => {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
+  app.get('/success', (req, res) => {
+    res.send('Paiement réussi ! Merci pour votre achat.');
+});
+
+app.get('/cancel', (req, res) => {
+    res.send('Le paiement a été annulé. Veuillez réessayer.');
+});
+
   // Checkout route
   app.use('/', checkoutRoute);
 

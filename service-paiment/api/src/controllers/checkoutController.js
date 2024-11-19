@@ -1,5 +1,7 @@
 const Paiment = require('../models/paimentModel');
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
+const dotenv = require('dotenv');
+dotenv.config();
 
 exports.createCheckout = async (req, res) => {
     try {
@@ -52,12 +54,13 @@ exports.createCheckout = async (req, res) => {
 };
 
 exports.manageWebhook = async (req, res) => {
-    console.log('SSSSSSSSSSSSSSS Received webhook');
+    console.log('Received webhook');
     const sig = req.headers['stripe-signature'];
 
     let event;
 
     try {
+        // Utiliser req.body directement car express.raw est activé
         event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err) {
         console.error(`Webhook signature verification failed: ${err.message}`);
@@ -66,6 +69,7 @@ exports.manageWebhook = async (req, res) => {
 
     console.log(`Received event: ${event.type}`);
 
+    // Gérer les différents types d'événements Stripe
     switch (event.type) {
         case 'checkout.session.completed':
             const session = event.data.object;
@@ -75,7 +79,6 @@ exports.manageWebhook = async (req, res) => {
                 { where: { sessionId: session.id } }
             );
             break;
-
         case 'checkout.session.async_payment_succeeded':
             const asyncSession = event.data.object;
             console.log(`Async payment succeeded: ${asyncSession.id}`);
@@ -84,7 +87,6 @@ exports.manageWebhook = async (req, res) => {
                 { where: { sessionId: asyncSession.id } }
             );
             break;
-
         case 'checkout.session.async_payment_failed':
             const failedSession = event.data.object;
             console.log(`Async payment failed: ${failedSession.id}`);
@@ -93,7 +95,6 @@ exports.manageWebhook = async (req, res) => {
                 { where: { sessionId: failedSession.id } }
             );
             break;
-            
         default:
             console.log(`Unhandled event type ${event.type}`);
     }

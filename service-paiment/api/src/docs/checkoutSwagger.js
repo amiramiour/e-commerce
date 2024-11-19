@@ -26,9 +26,11 @@
  *         price:
  *           type: number
  *           description: Le prix du produit en euros
+ *           minimum: 0.01
  *         quantity:
  *           type: integer
  *           description: La quantité du produit
+ *           minimum: 1
  */
 
 /**
@@ -60,19 +62,18 @@
  *               properties:
  *                 id:
  *                   type: string
- *                   description: L'ID de la session de paiement
- *                   example: "cs_test_a1b2c3d4e5f6g7h8i9j0"
- *       403:
- *         description: Accès interdit
+ *                   description: L'url de la session de paiement
+ *       401:
+ *         description: Produits vide ou Prix ou quantité inférieur à 0
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   description: Message d'erreur
- *                   example: "Accès interdit: token manquant ou invalide"
+ *                   example: "Products array cannot be empty"
  *       500:
  *         description: Erreur interne du serveur
  *         content:

@@ -37,7 +37,7 @@ describe('Checkout controller', () => {
                 });
 
             expect(response.statusCode).toBe(200);
-            expect(response.body.id).toBeDefined();
+            expect(response.body.url).toBeDefined();
 
             const paymentLog = await PaimentModel.findOne({ where: { sessionId: response.body.id } });
             expect(paymentLog).not.toBeNull();
@@ -73,7 +73,7 @@ describe('Checkout controller', () => {
                 });
 
             expect(response.statusCode).toBe(200);
-            expect(response.body.id).toBeDefined();
+            expect(response.body.url).toBeDefined();
 
             const paymentLog = await PaimentModel.findOne({ where: { sessionId: response.body.id } });
             expect(paymentLog).not.toBeNull();

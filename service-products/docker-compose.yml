@@ -1,0 +1,51 @@
+networks:
+  mynetwork:
+    driver: bridge
+
+services: 
+
+  db:
+    networks:
+      - mynetwork 
+    build: 
+      context: ./ 
+      dockerfile: docker/mysql/Dockerfile 
+    container_name: db 
+    restart: always 
+    
+    volumes: 
+      - ./db:/data/db 
+    ports: 
+      - "3306:3306" 
+    environment: 
+      MYSQL_DATABASE: ${DB_NAME} 
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} 
+
+  phpmyadmin:
+    networks:
+      - mynetwork 
+    image: phpmyadmin/phpmyadmin 
+    container_name: phpmyadmin 
+    environment: 
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} 
+    ports: 
+      - "8081:80" 
+    depends_on: 
+      - db 
+
+  app:
+    networks:
+      - mynetwork 
+    build: 
+      context: ./ 
+      dockerfile: docker/node/Dockerfile 
+    container_name: node-app 
+    volumes: 
+      - ./api:/home/node/app/api 
+    ports: 
+      - "3001:3001" 
+    depends_on: 
+      - db 
+    env_file: 
+      - .env

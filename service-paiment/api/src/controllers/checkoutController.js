@@ -4,17 +4,28 @@ const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 exports.createCheckout = async (req, res) => {
     try {
         const products = req.body.products;
-        const lineItems = products.map(product => ({
-            price_data: {
-                currency: 'eur',
-                product_data: {
-                    name: product.name,
-                    description: product.description,
+
+        if (!products || products.length === 0) {
+            return res.status(401).json({ error: 'Products array cannot be empty' });
+        }
+
+        const lineItems = products.map(product => {
+            if (product.price <= 0 || product.quantity <= 0) {
+                return res.status(401).json({ error: 'Price and quantity must be greater than 0' });
+            }
+
+            return {
+                price_data: {
+                    currency: 'eur',
+                    product_data: {
+                        name: product.name,
+                        description: product.description || '',
+                    },
+                    unit_amount: product.price * 100,
                 },
-                unit_amount: product.price * 100,
-            },
-            quantity: product.quantity,
-        }));
+                quantity: product.quantity,
+            };
+        });
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -24,9 +35,10 @@ exports.createCheckout = async (req, res) => {
             cancel_url: `http://${req.headers.host}/cancel`,
         });
 
+        // Enregistrer les informations de paiement dans la base de données
         await Paiment.create({
-            userId: 1,
             sessionId: session.id,
+            userId: 1, 
             status: 'created',
             amount_total: session.amount_total,
             currency: session.currency,

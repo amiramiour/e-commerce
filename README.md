@@ -7,3 +7,4 @@
 - password: String, required. 🔒
 - role: Boolean, required (0 = admin, 1 = user). 👤
 - name: String, required. 👋
+

@@ -30,7 +30,7 @@ describe('All tests for user controller', () => {
             lastname: "Richet", 
             email: "maxrichet78@gmail.com", 
             password: "123456",
-            role: "0"
+            role: true
         }
         const res = await request(app)
             .post('/users/register')
@@ -48,7 +48,7 @@ describe('All tests for user controller', () => {
             lastname: "Richet", 
             email: "maxrichet78@gmail.com", 
             password: "123456",
-            role: "0"
+            role: true
         }
         const res = await request(app)
             .post('/users/register')

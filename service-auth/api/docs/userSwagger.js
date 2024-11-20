@@ -38,7 +38,7 @@
  *           type: string
  *           description: User password
  *         role:
- *           type: string
+ *           type: boolean
  *           description: To find out is it's an admin or a normal account
  */
 

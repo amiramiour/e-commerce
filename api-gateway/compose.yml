@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - service-auth
+      - service-users
+      - service-products
+      - service-commands
+      - service-paiment
+
+  service-auth:
+    build:
+      context: ./service-auth
+      dockerfile: docker/node/Dockerfile
+    container_name: service-auth
+    volumes:
+      - ./service-auth:/home/node/app
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    env_file:
+      - ./service-auth/.env
+
+  service-users:
+    build:
+      context: ./service-users
+      dockerfile: docker/node/Dockerfile
+    container_name: service-users
+    volumes:
+      - ./service-users:/home/node/app
+    ports:
+      - "3002:3002"
+    depends_on:
+      - db
+    env_file:
+      - ./service-users/.env
+
+  service-products:
+    build:
+      context: ./service-products
+      dockerfile: docker/node/Dockerfile
+    container_name: service-products
+    volumes:
+      - ./service-products:/home/node/app
+    ports:
+      - "3003:3003"
+    env_file:
+      - ./service-products/.env
+
+  service-commands:
+    build:
+      context: ./service-commands
+      dockerfile: docker/node/Dockerfile
+    container_name: service-commands
+    volumes:
+      - ./service-commands:/home/node/app
+    ports:
+      - "3004:3004"
+    depends_on:
+      - db
+    env_file:
+      - ./service-commands/.env
+
+  service-paiment:
+    build:
+      context: ./service-paiment
+      dockerfile: docker/node/Dockerfile
+    container_name: service-paiment
+    volumes:
+      - ./service-paiment:/home/node/app
+    ports:
+      - "3005:3005"
+    depends_on:
+      - db
+    env_file:
+      - ./service-paiment/.env

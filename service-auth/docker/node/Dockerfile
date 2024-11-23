@@ -9,11 +9,9 @@ RUN npm install --ignore-scripts
 
 COPY ./api . 
 
-RUN npm run
-
 ENV TZ=Europe/Paris 
 
-EXPOSE 3002
+EXPOSE 3001
 
 USER node 
 

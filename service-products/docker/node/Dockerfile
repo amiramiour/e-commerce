@@ -16,7 +16,9 @@ COPY ./api ./
 # RUN npm run build
 
 # Exposer le port
-EXPOSE 3000
+EXPOSE 3003
+ENV TZ=Europe/Paris
+USER node
 
 # Démarrer l'application
 CMD ["npx", "nodemon", "app.js"]

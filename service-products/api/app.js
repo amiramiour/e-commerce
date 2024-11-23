@@ -19,6 +19,6 @@ app.use('/api/colors', colorRoutes);
 // Sync models with the database and start the server
 sequelize.sync({ force: true })
     .then(() => {
-        app.listen(3001, () => console.log('Server started on port 3001'));
+        app.listen(3003, () => console.log('Server started on port 3001'));
     })
     .catch(error => console.log('Error syncing database:', error));

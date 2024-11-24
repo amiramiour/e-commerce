@@ -20,4 +20,4 @@ ENV TZ=Europe/Paris
 USER node
 
 # Étape 7 : Démarrer l'application
-CMD ["npx", "nodemon", "app.js"]
+CMD ["npm", "start"] 

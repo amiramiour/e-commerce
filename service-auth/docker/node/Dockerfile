@@ -1,7 +1,7 @@
 # docker/node/Dockerfile
 FROM node:20.17-slim AS builder 
 
-WORKDIR /home/node/app 
+WORKDIR /home/node/app/api
 
 COPY ./api/package*.json ./ 
 

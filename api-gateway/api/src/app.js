@@ -5,16 +5,18 @@ const app = express();
 
 // Configuration des services
 const SERVICES = {
-  auth: 'http://service-auth:3001',
-  users: 'http://service-users:3002',
-  products: 'http://service-products:3003',
-  paiment: 'http://service-paiment:3005',
+  auth: 'http://localhost:3001/auth',
+  users: 'http://localhost:3002/users',
+  products: 'http://localhost:3003/products',
+  commands: 'http://localhost:3004/commands',
+  paiment: 'http://localhost:3005/paiment',
 };
 
 // Middleware de proxy
 app.use('/auth', createProxyMiddleware({ target: SERVICES.auth, changeOrigin: true }));
 app.use('/users', createProxyMiddleware({ target: SERVICES.users, changeOrigin: true }));
-app.use('/products', createProxyMiddleware({ target: SERVICES.products, changeOrigin: true }));
+app.use('/gestion', createProxyMiddleware({ target: SERVICES.products, changeOrigin: true }));
+app.use('/commands', createProxyMiddleware({ target: SERVICES.commands, changeOrigin: true }));
 app.use('/paiment', createProxyMiddleware({ target: SERVICES.paiment, changeOrigin: true }));
 
 // Endpoint de base pour tester

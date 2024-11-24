@@ -10,5 +10,8 @@
   "description": "",
   "devDependencies": {
     "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "http-proxy-middleware": "^3.0.3"
   }
 }

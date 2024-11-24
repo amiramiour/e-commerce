@@ -14,7 +14,7 @@ const sequelize = new Sequelize(
   {
     host: dbHost,  // Hôte de la base de données
     dialect: 'mysql',
-    port: process.env.DB_PORT || 3308, 
+    port: 3306, 
     retry: {
       max: 5,
       match: [

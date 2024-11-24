@@ -20,7 +20,7 @@ const User = sequelize.define('User', {
         allowNull: false
     },
     role: {
-        type: DataTypes.boolean,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
     }

@@ -10,6 +10,8 @@ lerna-debug.log*
 /*/db
 /*/db_test
 
+/*/data
+/*/test-data
 
 .env 
 

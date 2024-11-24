@@ -1,7 +1,7 @@
 FROM node:20.17-slim AS builder
 
 # Définir le répertoire de travail
-WORKDIR /home/node/app
+WORKDIR /home/node/app/api
 
 # Copier le package.json et package-lock.json
 COPY ./api/package*.json ./
@@ -21,4 +21,4 @@ ENV TZ=Europe/Paris
 USER node
 
 # Démarrer l'application
-CMD ["npx", "nodemon", "app.js"]
+CMD ["npm", "start"]

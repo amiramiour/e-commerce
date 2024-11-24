@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 
 app.use(bodyParser.json()); 
-app.use('/api/users', userRoutes);
+app.use('/users', userRoutes);
 
 // Documenter l'API avec Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(configSwagger.swaggerSpec));

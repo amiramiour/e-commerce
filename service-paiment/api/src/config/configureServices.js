@@ -21,7 +21,7 @@ app.get('/cancel', (req, res) => {
 });
 
   // Checkout route
-  app.use('/', checkoutRoute);
+  app.use('/paiment', checkoutRoute);
 
   await Paiment.sync();
 };

@@ -9,7 +9,7 @@ const configureServices = (app) => {
 
     // Ensuite, configure les routes
     const userRoute = require('../routes/user.route');
-    app.use('/users', userRoute);
+    app.use('/auth', userRoute);
 
     // Documentation API
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(configSwagger));

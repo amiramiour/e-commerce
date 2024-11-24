@@ -15,4 +15,4 @@ EXPOSE 3002
 
 USER node 
 
-CMD ["npm", "run", "dev"] 
+CMD ["npm", "start"] 

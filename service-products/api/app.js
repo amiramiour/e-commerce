@@ -11,10 +11,10 @@ app.use(express.json());
 
 // Routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-app.use('/api/products', productRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/sizes', sizeRoutes);
-app.use('/api/colors', colorRoutes);
+app.use('/gestion/products', productRoutes);
+app.use('/gestion/categories', categoryRoutes);
+app.use('/gestion/sizes', sizeRoutes);
+app.use('/gestion/colors', colorRoutes);
 
 // Sync models with the database and start the server
 sequelize.sync({ force: true })

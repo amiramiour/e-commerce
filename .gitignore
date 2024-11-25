@@ -7,9 +7,11 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-/db
-/db_test
+/*/db
+/*/db_test
 
+/*/data
+/*/test-data
 
 .env 
 

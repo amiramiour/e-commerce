@@ -1,0 +1,171 @@
+version: '3.8'
+
+services:
+  auth-db:
+    image: mariadb:lts
+    container_name: auth-db
+    env_file:
+      - ./service-auth/.env
+    restart: always
+    volumes: 
+      - ./service-auth/data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "authentif"
+      MYSQL_PASSWORD: "test"
+      MYSQL_USER: "sarah"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    ports:
+      - "3307:3306"
+
+  users-db:
+    image: mariadb:lts
+    container_name: users-db
+    env_file:
+      - ./service-users/.env
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+    environment:
+      MYSQL_DATABASE: "db_users"
+      MYSQL_USER: "sarah"
+      MYSQL_PASSWORD: "passwordDb"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    volumes:
+      - ./service-users/data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+
+  products-db:
+    image: mariadb:lts
+    container_name: products-db
+    env_file:
+      - ./service-products/.env
+    restart: always 
+    volumes: 
+      - ./service-products/data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+    environment: 
+      MYSQL_DATABASE: "db_produits"
+      MYSQL_USER: "sarah"
+      MYSQL_PASSWORD: "test"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    ports: 
+      - "3309:3306"
+
+  paiment-db:
+    image: mariadb:lts
+    container_name: paiment-db
+    env_file:
+      - ./service-paiment/.env
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+    environment:
+      MYSQL_USER: "sarah"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "db"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    volumes:
+      - ./service-paiment/data:/var/lib/mysql
+    ports: 
+      - "3310:3306"
+
+  paiment-db-test:
+    image: mariadb:lts
+    container_name: paiment-db-test
+    env_file:
+      - ./service-paiment/.env
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+    environment:
+      MYSQL_DATABASE: "db_test"
+      MYSQL_USER: "myuser"
+      MYSQL_PASSWORD: "mypassword"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    volumes:
+      - ./service-paiment/test-data:/var/lib/mysql
+    ports: 
+      - "3311:3306"
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - service-auth
+      - service-users
+      - service-products
+      - service-paiment
+
+  service-auth:
+    build:
+      context: ./service-auth
+      dockerfile: docker/node/Dockerfile
+    container_name: service-auth
+    volumes:
+      - ./service-auth:/home/node/app
+    ports:
+      - "3001:3001"
+    depends_on:
+      - auth-db
+    env_file:
+      - ./service-auth/.env
+
+  service-users:
+    build:
+      context: ./service-users
+      dockerfile: docker/node/Dockerfile
+    container_name: service-users
+    volumes:
+      - ./service-users:/home/node/app
+    ports:
+      - "3002:3002"
+    depends_on:
+      - users-db
+    env_file:
+      - ./service-users/.env
+
+  service-products:
+    build:
+      context: ./service-products
+      dockerfile: docker/node/Dockerfile
+    container_name: service-products
+    volumes:
+      - ./service-products:/home/node/app
+    ports:
+      - "3003:3003"
+    depends_on:
+      - products-db
+    env_file:
+      - ./service-products/.env
+
+  service-paiment:
+    build:
+      context: ./service-paiment
+      dockerfile: docker/node/Dockerfile
+    container_name: service-paiment
+    volumes:
+      - ./service-paiment:/home/node/app
+    ports:
+      - "3005:3005"
+    depends_on:
+      - paiment-db
+    env_file:
+      - ./service-paiment/.env

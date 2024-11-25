@@ -1,0 +1,56 @@
+version: '3'
+
+services: 
+
+  db:
+    build: 
+      context: ./ 
+      dockerfile: docker/mysql/Dockerfile 
+    restart: always
+    healthcheck:
+      interval: 30s
+      retries: 3
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized"
+        ]
+      timeout: 30s
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    volumes:
+      - ./db:/var/lib/mysql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8081:80'
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      PMA_ARBITRARY: 1
+
+  app: 
+    build: 
+      context: ./ 
+      dockerfile: docker/node/Dockerfile 
+    container_name: node-app 
+    volumes: 
+      - ./api:/home/node/app/api 
+    ports: 
+      - "3000:3000" 
+    depends_on: 
+      - db 
+    env_file: 
+      - .env

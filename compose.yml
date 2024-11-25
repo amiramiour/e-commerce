@@ -122,6 +122,27 @@ services:
     ports: 
       - "3312:3306"
 
+  commands-db-test:
+    image: mariadb:lts
+    container_name: commands-db-test
+    env_file:
+      - ./service-commands/.env
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+    environment:
+      MYSQL_DATABASE: "db_test"
+      MYSQL_USER: "myuser"
+      MYSQL_PASSWORD: "mypassword"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    volumes:
+      - ./service-commands/test-data:/var/lib/mysql
+    ports: 
+      - "3313:3306"
+
   api-gateway:
     build:
       context: ./api-gateway

@@ -40,7 +40,7 @@ exports.createCheckout = async (req, res) => {
         // Enregistrer les informations de paiement dans la base de données
         await Paiment.create({
             sessionId: session.id,
-            userId: 1, 
+            userId: req.params.id, 
             status: 'created',
             amount_total: session.amount_total,
             currency: session.currency,

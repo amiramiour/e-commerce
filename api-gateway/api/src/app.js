@@ -29,6 +29,15 @@ app.use('/gestion/categories/admin', jwtMiddleware.verifyTokenAdmin, createProxy
 app.use('/gestion/colors/list', createProxyMiddleware({ target: 'http://localhost:3003/gestion/colors/list', changeOrigin: true }));
 // CRUD pour les colors
 app.use('/gestion/colors/admin', jwtMiddleware.verifyTokenAdmin, createProxyMiddleware({ target: 'http://localhost:3003/gestion/colors/admin', changeOrigin: true }));
+// route pour get all colors
+app.use('/gestion/sizes/list', createProxyMiddleware({ target: 'http://localhost:3003/gestion/sizes/list', changeOrigin: true }));
+// CRUD pour les colors
+app.use('/gestion/sizes/admin', jwtMiddleware.verifyTokenAdmin, createProxyMiddleware({ target: 'http://localhost:3003/gestion/sizes/admin', changeOrigin: true }));
+// route pour get all colors
+app.use('/gestion/products/list', createProxyMiddleware({ target: 'http://localhost:3003/gestion/sizes/list', changeOrigin: true }));
+// CRUD pour les colors
+app.use('/gestion/products/admin', jwtMiddleware.verifyTokenAdmin, createProxyMiddleware({ target: 'http://localhost:3003/gestion/sizes/admin', changeOrigin: true }));
+
 
 
 

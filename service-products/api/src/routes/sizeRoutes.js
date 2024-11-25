@@ -3,9 +3,9 @@ const router = express.Router();
 const sizeController = require('../controllers/SizeController');
 
 // Routes pour les tailles
-router.get('/', sizeController.getAllSizes); 
-router.post('/', sizeController.createSize); 
-router.put('/:id', sizeController.updateSize); 
-router.delete('/:id', sizeController.deleteSize);
+router.get('/list', sizeController.getAllSizes); 
+router.post('/admin', sizeController.createSize); 
+router.put('/admin/:id', sizeController.updateSize); 
+router.delete('/admin/:id', sizeController.deleteSize);
 
 module.exports = router;

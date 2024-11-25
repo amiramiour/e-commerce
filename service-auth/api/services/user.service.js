@@ -34,6 +34,6 @@ exports.Login = async (email, password) => {
     if (user.email === email && !comparePass)
         throw new AppError(401, errorMessages.INVALID_EMAIL_PASS);
 
-    const userData = { email: user.email, role: user.role };
+    const userData = { email: user.id, role: user.role };
     return jwt.sign(userData, process.env.JWT_KEY, { expiresIn: '10d' });
 };

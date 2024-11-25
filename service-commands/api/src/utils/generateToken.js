@@ -1,4 +1,4 @@
-// api/src/utils/generateToken.js
+/*// api/src/utils/generateToken.js
 
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
@@ -12,4 +12,4 @@ const userPayload = {
 
 const token = jwt.sign(userPayload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-console.log('Token généré :', token);
+console.log('Token généré :', token);*/

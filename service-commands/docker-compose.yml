@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   db:
+    container_name: service-commands-db
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -12,6 +13,34 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: always
+    networks:
+      - app-network
+
+  db_test:
+    container_name: service-commands-db_test
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: commandes_db_test
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3307:3306" # Port différent pour la base de test
+    volumes:
+      - mysql_data_test:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - app-network
 
   service-commands:
     build:
@@ -21,10 +50,13 @@ services:
       - "3004:3004"
     depends_on:
       - db
+      - db_test
     env_file:
       - .env
+    networks:
+      - app-network
     restart: always
-    entrypoint: ["sh", "-c", "while ! nc -z db 3306; do sleep 1; done; node api/src/app.js"]
+    entrypoint: ["sh", "-c", "while ! nc -z db 3306; do sleep 1; done; while ! nc -z db_test 3306; do sleep 1; done; node src/app.js"]  
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -36,6 +68,12 @@ services:
       - "8080:80"
     depends_on:
       - db
+    networks:
+      - app-network
 
 volumes:
   mysql_data:
+  mysql_data_test:
+
+networks:
+  app-network:

@@ -1,2 +1,26 @@
+# Node modules
 node_modules/
+
+# Environment variables
 .env
+.env.test
+.env.production
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Test coverage reports
+coverage/
+
+# Built files
+dist/

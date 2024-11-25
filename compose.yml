@@ -46,6 +46,11 @@ services:
     restart: always 
     volumes: 
       - ./service-products/data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
     environment: 
       MYSQL_DATABASE: "db_produits"
       MYSQL_USER: "sarah"

@@ -4,8 +4,8 @@ const userController = require('../controllers/userController');
 const jwtMiddleware = require('../middlewares/jwtMiddleware');
 
 // Routes utilisateur
-router.get('/', jwtMiddleware.verifyToken, userController.getUserByIdetUserById );
-router.put('/', jwtMiddleware.verifyToken, userController.updateUser );
-router.delete('/', jwtMiddleware.verifyToken, userController.deleteUser );
+router.get('/', jwtMiddleware.verifyTokenUser, userController.getUserByIdetUserById );
+router.put('/', jwtMiddleware.verifyTokenUser, userController.updateUser );
+router.delete('/', jwtMiddleware.verifyTokenUser, userController.deleteUser );
 
 module.exports = router;

@@ -1,23 +1,27 @@
-# Étape 1 : Utiliser une image de base Node.js
-FROM node:14
+# Utiliser l'image Node.js officielle
+FROM node:20.17-slim
 
-# Étape 2 : Met à jour le système et installe netcat
-RUN apt-get update && apt-get install -y netcat
+# Créer un dossier de travail
+WORKDIR /home/node/app/api
 
-# Étape 3 : Définir le répertoire de travail dans le conteneur
-WORKDIR /app
+# Copier le package.json et package-lock.json
+COPY ./api/package.json ./
 
-# Étape 4 : Copier les fichiers package.json et package-lock.json
-COPY ../api/package*.json ./
+# Installer les dépendances
+RUN npm install --ignore-scripts
 
-# Étape 5 : Installer les dépendances
-RUN npm install
+# Copier le reste du code
+COPY ./api/ ./
 
-# Étape 6 : Copier le reste des fichiers de l'application
-COPY ../api ./
-
-# Étape 7 : Exposer le port sur lequel l'application sera disponible
+# Exposer le port (par exemple 3000)
 EXPOSE 3004
 
-# Étape 8 : Démarrer l'application
+# RUN npm start
+
+ENV TZ=Europe/Paris
+
+#pour que l utilisateur ne soit pas root => couche de securite : l utilisateur node n a pas les droits de faire des install
+USER node
+
+# Commande pour démarrer l'application
 CMD ["npm", "start"]

@@ -1,24 +1,27 @@
+require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
-// Sélectionne la base de données en fonction de l'environnement
 const dbName = process.env.NODE_ENV === 'test' ? process.env.DB_NAME_TEST : process.env.DB_NAME;
+const dbUser = process.env.NODE_ENV === 'test' ? process.env.DB_USER_TEST : process.env.DB_USER;
+const dbPassword = process.env.NODE_ENV === 'test' ? process.env.DB_PASSWORD_TEST : process.env.DB_PASSWORD;
+const dbHost = process.env.NODE_ENV === 'test' ? process.env.DB_HOST_TEST : process.env.DB_HOST;
 
-// Crée une instance Sequelize avec les variables d'environnement
-const sequelize = new Sequelize(dbName, process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    dialect: 'mysql',
-    logging: false, // Désactive les logs SQL pour rendre les tests plus propres
-});
+const db = new Sequelize(dbName, dbUser, dbPassword, {
+        host: dbHost,
+        dialect: process.env.DB_DIALECT,
+            logging: (msg) => console.log(`SQL Query: ${msg}`) 
+    },
+);
 
-// Fonction pour tester la connexion
-const connectDb = async () => {
+const connectDB = async () => {
     try {
-        await sequelize.authenticate();
-        console.log(`Connexion à la base de données "${dbName}" réussie.`);
+            await db.authenticate();
+            console.log(`Connected to the ${process.env.NODE_ENV === 'test' ? 'test' : 'development'} database!`);
     } catch (error) {
-        console.error('Erreur de connexion à la base de données:', error);
-        throw error;
+        console.error('Impossible de se connecter à la base de données:', error);
     }
+
+    return db;
 };
 
-module.exports = { sequelize, connectDb };
+module.exports = {connectDB, db};

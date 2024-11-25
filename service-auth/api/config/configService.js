@@ -11,6 +11,10 @@ const configureServices = (app) => {
     const userRoute = require('../routes/user.route');
     app.use('/auth', userRoute);
 
+    app.get('/', (req, res) => {
+        res.json({ message: 'Auth is running!' });
+      });
+
     // Documentation API
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(configSwagger));
 };

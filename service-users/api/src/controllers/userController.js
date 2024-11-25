@@ -6,7 +6,7 @@ const argon2 = require('argon2');
 // Récupérer les informations de l'utilisateur par ID
 exports.getUserById = async (req, res) => {
     try {
-        const user = await User.findByPk(req.params.id); // Utilise l'ID passé en paramètre
+        const user = await User.findByPk(req.params.id); 
         if (!user) {
             return res.status(404).json({ error: 'Utilisateur non trouvé' });
         }
@@ -21,7 +21,7 @@ exports.getUserById = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         const [updated] = await User.update(req.body, {
-            where: { id: req.params.id }, // Utilise l'ID passé en paramètre
+            where: { id: req.params.id }, 
         });
         if (!updated) {
             return res.status(404).json({ error: 'Utilisateur non trouvé' });
@@ -41,12 +41,12 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     try {
         const deleted = await User.destroy({
-            where: { id: req.params.id }, // Utilise l'ID passé en paramètre
+            where: { id: req.params.id }, 
         });
         if (!deleted) {
             return res.status(404).json({ error: 'Utilisateur non trouvé' });
         }
-        res.status(204).json(); // Pas de contenu
+        res.status(204).json(); 
     } catch (error) {
         console.error('Erreur lors de la suppression de l\'utilisateur :', error);
         res.status(500).json({ error: 'Erreur lors de la suppression de l\'utilisateur' });

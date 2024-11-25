@@ -1,17 +1,13 @@
-const app = require('../app');
+const port= 3004;
 
-// Fonction pour démarrer le serveur
-const startServer = async () => {
-    const PORT = process.env.PORT || 3004; // Définit le port du serveur depuis l'environnement ou 3004 par défaut
-
+const startServeur = async(app) => {
     try {
-        app.listen(PORT, () => {
-            console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
+        app.listen(port, () => {
+            console.log(`Server running on port ${port}`);
         });
     } catch (error) {
-        console.error('Erreur lors du démarrage du serveur :', error);
-        throw error;
+        console.log(error)
     }
-};
+}
 
-module.exports = startServer;
+module.exports =  startServeur;

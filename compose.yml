@@ -101,6 +101,27 @@ services:
     ports: 
       - "3311:3306"
 
+  commands-db:
+    image: mariadb:lts
+    container_name: commands-db
+    env_file:
+      - ./service-commands/.env
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+    environment:
+      MYSQL_USER: "sarah"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "db"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    volumes:
+      - ./service-commands/data:/var/lib/mysql
+    ports: 
+      - "3312:3306"
+
   api-gateway:
     build:
       context: ./api-gateway
@@ -112,6 +133,7 @@ services:
       - service-auth
       - service-users
       - service-products
+      - service-commands
       - service-paiment
 
   service-auth:
@@ -155,6 +177,21 @@ services:
       - products-db
     env_file:
       - ./service-products/.env
+
+  service-commands:
+    build:
+      context: ./service-commands
+      dockerfile: docker/node/Dockerfile
+    container_name: service-commands
+    volumes:
+      - ./service-commands:/home/node/app
+    ports:
+      - "3004:3004"
+    depends_on:
+      - commands-db
+    env_file:
+      - ./service-commands/.env
+
 
   service-paiment:
     build:

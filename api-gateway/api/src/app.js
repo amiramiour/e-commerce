@@ -12,12 +12,26 @@ const SERVICES = {
   paiment: 'http://localhost:3005/paiment',
 };
 
+const jwtMiddleware = require('./middlewares/jwtMiddleware');
+
 const userRoute = require('./routes/userRoute');
 
-// Middleware de proxy
-app.use('/auth', createProxyMiddleware({ target: SERVICES.auth, changeOrigin: true }));
+// Middleware de proxy pour rediriger les requêtes vers les services  
+//route pour login et register user
+app.use('/auth', createProxyMiddleware({ target: 'http://localhost:3001/auth', changeOrigin: true }));
+//CRUD pour les users
 app.use('/users', userRoute);
-app.use('/gestion', createProxyMiddleware({ target: SERVICES.products, changeOrigin: true }));
+// route pour get all products
+app.use('/gestion/categories/list', createProxyMiddleware({ target: 'http://localhost:3003/gestion/categories/list', changeOrigin: true }));
+// CRUD pour les catégories
+app.use('/gestion/categories/admin', jwtMiddleware.verifyTokenAdmin, createProxyMiddleware({ target: 'http://localhost:3003/gestion/categories/admin', changeOrigin: true }));
+// route pour get all colors
+app.use('/gestion/colors/list', createProxyMiddleware({ target: 'http://localhost:3003/gestion/colors/list', changeOrigin: true }));
+// CRUD pour les colors
+app.use('/gestion/colors/admin', jwtMiddleware.verifyTokenAdmin, createProxyMiddleware({ target: 'http://localhost:3003/gestion/colors/admin', changeOrigin: true }));
+
+
+
 app.use('/commands', createProxyMiddleware({ target: SERVICES.commands, changeOrigin: true }));
 app.use('/paiment', createProxyMiddleware({ target: SERVICES.paiment, changeOrigin: true }));
 

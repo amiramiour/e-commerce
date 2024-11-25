@@ -12,9 +12,11 @@ const SERVICES = {
   paiment: 'http://localhost:3005/paiment',
 };
 
+const userRoute = require('./routes/userRoute');
+
 // Middleware de proxy
 app.use('/auth', createProxyMiddleware({ target: SERVICES.auth, changeOrigin: true }));
-app.use('/users', createProxyMiddleware({ target: SERVICES.users, changeOrigin: true }));
+app.use('/users', userRoute);
 app.use('/gestion', createProxyMiddleware({ target: SERVICES.products, changeOrigin: true }));
 app.use('/commands', createProxyMiddleware({ target: SERVICES.commands, changeOrigin: true }));
 app.use('/paiment', createProxyMiddleware({ target: SERVICES.paiment, changeOrigin: true }));

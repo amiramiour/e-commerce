@@ -15,7 +15,16 @@ const configureServices = async(app) => {
     // create checkout session
     app.use('/paiment', paimentRoute);
     //route pour login et register user
-    app.use('/auth', createProxyMiddleware({ target: 'http://localhost:3001/auth', changeOrigin: true }));
+    app.use(
+        '/auth',
+        createProxyMiddleware({
+            target: 'http://localhost:3001', 
+            changeOrigin: true,
+            pathRewrite: {
+                '^/auth': '/auth', 
+            },
+        })
+    );
     // route pour get all products
     app.use('/gestion/categories/list', createProxyMiddleware({ target: 'http://localhost:3003/gestion/categories/list', changeOrigin: true }));
     // CRUD pour les catégories

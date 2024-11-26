@@ -4,9 +4,9 @@ const router = express.Router();
 const colorController = require('../controllers/ColorController');
 
 // Routes pour les couleurs
-router.get('/list', colorController.getAllColors);
-router.post('/admin', colorController.createColor); 
-router.put('/admin/:id', colorController.updateColor); 
-router.delete('/admin/:id', colorController.deleteColor);
+router.get('/', colorController.getAllColors);
+router.post('/', colorController.createColor); 
+router.put('/:id', colorController.updateColor); 
+router.delete('/:id', colorController.deleteColor);
 
 module.exports = router;

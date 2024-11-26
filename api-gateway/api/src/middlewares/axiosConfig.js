@@ -1,23 +1,29 @@
 const axios = require('axios');
 
+const authServiceUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:3001';
+const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:3002';
+const productServiceUrl = process.env.PRODUCT_SERVICE_URL || 'http://localhost:3003';
+const commandServiceUrl = process.env.COMMAND_SERVICE_URL || 'http://localhost:3004';
+const paimentServiceUrl = process.env.PAIMENT_SERVICE_URL || 'http://localhost:3005';
+
 exports.axiosAuth = axios.create({
-    baseURL: 'http://localhost:3001/auth'
+    baseURL: `${authServiceUrl}/auth`
 });
 
 exports.axiosUser = axios.create({
-    baseURL: 'http://localhost:3002/users'
+    baseURL: `${userServiceUrl}/users`
 });
 
 exports.axiosProduct = axios.create({
-    baseURL: 'http://localhost:3003'
+    baseURL: `${productServiceUrl}/`
 });
 
 exports.axiosOrder = axios.create({
-    baseURL: 'http://localhost:3004'
+    baseURL: `${commandServiceUrl}/`
 });
 
 
 exports.axiosPaiment = axios.create({
-    baseURL: 'http://localhost:3005'
+    baseURL: `${paimentServiceUrl}/`
 });
 

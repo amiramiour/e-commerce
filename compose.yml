@@ -16,6 +16,8 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: yes
     ports:
       - "3307:3306"
+    networks:
+      - app-network
 
   users-db:
     image: mariadb:lts
@@ -37,6 +39,8 @@ services:
       - ./service-users/data:/var/lib/mysql
     ports:
       - "3308:3306"
+    networks:
+      - app-network
 
   products-db:
     image: mariadb:lts
@@ -58,6 +62,8 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: yes
     ports: 
       - "3309:3306"
+    networks:
+      - app-network
 
   paiment-db:
     image: mariadb:lts
@@ -79,6 +85,8 @@ services:
       - ./service-paiment/data:/var/lib/mysql
     ports: 
       - "3310:3306"
+    networks:
+      - app-network
 
   paiment-db-test:
     image: mariadb:lts
@@ -100,6 +108,8 @@ services:
       - ./service-paiment/test-data:/var/lib/mysql
     ports: 
       - "3311:3306"
+    networks:
+      - app-network
 
   commands-db:
     image: mariadb:lts
@@ -121,6 +131,8 @@ services:
       - ./service-commands/data:/var/lib/mysql
     ports: 
       - "3312:3306"
+    networks:
+      - app-network
 
   commands-db-test:
     image: mariadb:lts
@@ -142,6 +154,8 @@ services:
       - ./service-commands/test-data:/var/lib/mysql
     ports: 
       - "3313:3306"
+    networks:
+      - app-network
 
   api-gateway:
     build:
@@ -150,6 +164,12 @@ services:
     container_name: api-gateway
     ports:
       - "3000:3000"
+    environment:
+      AUTH_SERVICE_URL: http://service-auth:3001
+      USER_SERVICE_URL: http://service-users:3002
+      PRODUCT_SERVICE_URL: http://service-products:3003
+      COMMAND_SERVICE_URL: http://service-commands:3004
+      PAIMENT_SERVICE_URL: http://service-paiment:3005
     depends_on:
       - service-auth
       - service-users
@@ -170,6 +190,8 @@ services:
       - auth-db
     env_file:
       - ./service-auth/.env
+    networks:
+      - app-network
 
   service-users:
     build:
@@ -184,6 +206,8 @@ services:
       - users-db
     env_file:
       - ./service-users/.env
+    networks:
+      - app-network
 
   service-products:
     build:
@@ -198,6 +222,8 @@ services:
       - products-db
     env_file:
       - ./service-products/.env
+    networks:
+      - app-network
 
   service-commands:
     build:
@@ -212,6 +238,8 @@ services:
       - commands-db
     env_file:
       - ./service-commands/.env
+    networks:
+      - app-network
 
 
   service-paiment:
@@ -227,3 +255,9 @@ services:
       - paiment-db
     env_file:
       - ./service-paiment/.env
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

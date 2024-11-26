@@ -23,7 +23,7 @@ exports.createCheckout = async (req, res) => {
                         name: product.name,
                         description: product.description || '',
                     },
-                    unit_amount: product.price * 100,
+                    unit_amount: product.total_price * 100,
                 },
                 quantity: product.quantity,
             };

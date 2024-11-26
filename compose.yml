@@ -13,7 +13,7 @@ services:
       MYSQL_DATABASE: "authentif"
       MYSQL_PASSWORD: "test"
       MYSQL_USER: "sarah"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     ports:
       - "3307:3306"
     networks:
@@ -34,7 +34,7 @@ services:
       MYSQL_DATABASE: "db_users"
       MYSQL_USER: "sarah"
       MYSQL_PASSWORD: "passwordDb"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     volumes:
       - ./service-users/data:/var/lib/mysql
     ports:
@@ -59,7 +59,7 @@ services:
       MYSQL_DATABASE: "db_produits"
       MYSQL_USER: "sarah"
       MYSQL_PASSWORD: "test"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     ports: 
       - "3309:3306"
     networks:
@@ -80,7 +80,7 @@ services:
       MYSQL_USER: "sarah"
       MYSQL_PASSWORD: "test"
       MYSQL_DATABASE: "db"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     volumes:
       - ./service-paiment/data:/var/lib/mysql
     ports: 
@@ -103,7 +103,7 @@ services:
       MYSQL_DATABASE: "db_test"
       MYSQL_USER: "myuser"
       MYSQL_PASSWORD: "mypassword"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     volumes:
       - ./service-paiment/test-data:/var/lib/mysql
     ports: 
@@ -126,7 +126,7 @@ services:
       MYSQL_USER: "sarah"
       MYSQL_PASSWORD: "test"
       MYSQL_DATABASE: "db"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     volumes:
       - ./service-commands/data:/var/lib/mysql
     ports: 
@@ -149,7 +149,7 @@ services:
       MYSQL_DATABASE: "db_test"
       MYSQL_USER: "myuser"
       MYSQL_PASSWORD: "mypassword"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     volumes:
       - ./service-commands/test-data:/var/lib/mysql
     ports: 
@@ -240,7 +240,6 @@ services:
       - ./service-commands/.env
     networks:
       - app-network
-
 
   service-paiment:
     build:

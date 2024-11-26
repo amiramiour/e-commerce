@@ -16,9 +16,13 @@ const Order = sequelize.define('Order', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
 }, {
     tableName: 'orders',
-    timestamps: false, // Désactive les colonnes createdAt et updatedAt automatiques
+    timestamps: true, 
 });
 
 module.exports = Order;

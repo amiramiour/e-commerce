@@ -5,9 +5,12 @@ const productRoutes = require('./src/routes/productRoutes');
 const categoryRoutes = require('./src/routes/categoryRoutes');
 const sizeRoutes = require('./src/routes/sizeRoutes');
 const colorRoutes = require('./src/routes/colorRoutes');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
+
+app.use(cors());
 
 // Routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));

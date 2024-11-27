@@ -2,6 +2,11 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db'); // Importer l'instance de sequelize
 
 const User = sequelize.define('User', {
+  id: { 
+    type: DataTypes.INTEGER, 
+    autoIncrement: true, 
+    primaryKey: true 
+  },
   firstname: {
     type: DataTypes.STRING,
     allowNull: false,

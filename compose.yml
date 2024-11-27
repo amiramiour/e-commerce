@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   auth-db:
     image: mariadb:lts
@@ -18,30 +16,7 @@ services:
       - "3307:3306"
     networks:
       - app-network
-
-  users-db:
-    image: mariadb:lts
-    container_name: users-db
-    env_file:
-      - ./service-users/.env
-    restart: always
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 30s
-      retries: 3
-      timeout: 10s
-    environment:
-      MYSQL_DATABASE: "db_users"
-      MYSQL_USER: "sarah"
-      MYSQL_PASSWORD: "passwordDb"
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-    volumes:
-      - ./service-users/data:/var/lib/mysql
-    ports:
-      - "3308:3306"
-    networks:
-      - app-network
-
+      
   products-db:
     image: mariadb:lts
     container_name: products-db
@@ -176,6 +151,10 @@ services:
       - service-products
       - service-commands
       - service-paiment
+    networks:
+      - app-network
+    env_file:
+      - ./api-gateway/.env
 
   service-auth:
     build:
@@ -203,7 +182,7 @@ services:
     ports:
       - "3002:3002"
     depends_on:
-      - users-db
+      - auth-db
     env_file:
       - ./service-users/.env
     networks:

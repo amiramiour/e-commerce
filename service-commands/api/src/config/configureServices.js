@@ -15,7 +15,7 @@ const configureServices = async(app) => {
 
     app.use(cors());
     
-    app.use('/api', ordersRoutes);
+    app.use('/', ordersRoutes);
 
     app.get('/', (req, res) => {
         res.send('Service de gestion des commandes est opérationnel');

@@ -1,9 +1,9 @@
 // api/src/models/orderModel.js
 
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/connectDb');
+const {db} = require('../config/connectDb');
 
-const Order = sequelize.define('Order', {
+const Order = db.define('Order', {
     product_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -16,9 +16,13 @@ const Order = sequelize.define('Order', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
 }, {
     tableName: 'orders',
-    timestamps: false, // Désactive les colonnes createdAt et updatedAt automatiques
+    timestamps: true, 
 });
 
 module.exports = Order;

@@ -90,3 +90,16 @@ exports.getSimilarProducts = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+exports.getProductByName = async (req, res) => {
+    try {
+       const product = await Product.findOne({ where: { name: req.params.name } });
+       if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        return res.status(200).res.json(product);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}

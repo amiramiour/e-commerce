@@ -3,6 +3,7 @@ const  swaggerUi = require('swagger-ui-express');
 const configSwagger =  require('../config/swagger-config');
 const checkoutRoute = require('../routes/checkoutRoute');
 const Paiment = require('../models/paimentModel');
+const cors = require('cors');
 
 const configureServices = async(app) => {
   // Swagger documentation route
@@ -11,6 +12,8 @@ const configureServices = async(app) => {
   // Middleware for parsing requests
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+
+  app.use(cors());
 
   app.get('/success', (req, res) => {
     res.send('Paiement réussi ! Merci pour votre achat.');

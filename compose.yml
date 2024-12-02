@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   auth-db:
     image: mariadb:lts
@@ -13,31 +11,12 @@ services:
       MYSQL_DATABASE: "authentif"
       MYSQL_PASSWORD: "test"
       MYSQL_USER: "sarah"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     ports:
       - "3307:3306"
-
-  users-db:
-    image: mariadb:lts
-    container_name: users-db
-    env_file:
-      - ./service-users/.env
-    restart: always
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 30s
-      retries: 3
-      timeout: 10s
-    environment:
-      MYSQL_DATABASE: "db_users"
-      MYSQL_USER: "sarah"
-      MYSQL_PASSWORD: "passwordDb"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
-    volumes:
-      - ./service-users/data:/var/lib/mysql
-    ports:
-      - "3308:3306"
-
+    networks:
+      - app-network
+      
   products-db:
     image: mariadb:lts
     container_name: products-db
@@ -55,9 +34,11 @@ services:
       MYSQL_DATABASE: "db_produits"
       MYSQL_USER: "sarah"
       MYSQL_PASSWORD: "test"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     ports: 
       - "3309:3306"
+    networks:
+      - app-network
 
   paiment-db:
     image: mariadb:lts
@@ -74,11 +55,13 @@ services:
       MYSQL_USER: "sarah"
       MYSQL_PASSWORD: "test"
       MYSQL_DATABASE: "db"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     volumes:
       - ./service-paiment/data:/var/lib/mysql
     ports: 
       - "3310:3306"
+    networks:
+      - app-network
 
   paiment-db-test:
     image: mariadb:lts
@@ -95,11 +78,59 @@ services:
       MYSQL_DATABASE: "db_test"
       MYSQL_USER: "myuser"
       MYSQL_PASSWORD: "mypassword"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     volumes:
       - ./service-paiment/test-data:/var/lib/mysql
     ports: 
       - "3311:3306"
+    networks:
+      - app-network
+
+  commands-db:
+    image: mariadb:lts
+    container_name: commands-db
+    env_file:
+      - ./service-commands/.env
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+    environment:
+      MYSQL_USER: "sarah"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "db"
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - ./service-commands/data:/var/lib/mysql
+    ports: 
+      - "3312:3306"
+    networks:
+      - app-network
+
+  commands-db-test:
+    image: mariadb:lts
+    container_name: commands-db-test
+    env_file:
+      - ./service-commands/.env
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+    environment:
+      MYSQL_DATABASE: "db_test"
+      MYSQL_USER: "myuser"
+      MYSQL_PASSWORD: "mypassword"
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - ./service-commands/test-data:/var/lib/mysql
+    ports: 
+      - "3313:3306"
+    networks:
+      - app-network
 
   api-gateway:
     build:
@@ -108,11 +139,22 @@ services:
     container_name: api-gateway
     ports:
       - "3000:3000"
+    environment:
+      AUTH_SERVICE_URL: http://service-auth:3001
+      USER_SERVICE_URL: http://service-users:3002
+      PRODUCT_SERVICE_URL: http://service-products:3003
+      COMMAND_SERVICE_URL: http://service-commands:3004
+      PAIMENT_SERVICE_URL: http://service-paiment:3005
     depends_on:
       - service-auth
       - service-users
       - service-products
+      - service-commands
       - service-paiment
+    networks:
+      - app-network
+    env_file:
+      - ./api-gateway/.env
 
   service-auth:
     build:
@@ -127,6 +169,8 @@ services:
       - auth-db
     env_file:
       - ./service-auth/.env
+    networks:
+      - app-network
 
   service-users:
     build:
@@ -138,9 +182,11 @@ services:
     ports:
       - "3002:3002"
     depends_on:
-      - users-db
+      - auth-db
     env_file:
       - ./service-users/.env
+    networks:
+      - app-network
 
   service-products:
     build:
@@ -155,6 +201,24 @@ services:
       - products-db
     env_file:
       - ./service-products/.env
+    networks:
+      - app-network
+
+  service-commands:
+    build:
+      context: ./service-commands
+      dockerfile: docker/node/Dockerfile
+    container_name: service-commands
+    volumes:
+      - ./service-commands:/home/node/app
+    ports:
+      - "3004:3004"
+    depends_on:
+      - commands-db
+    env_file:
+      - ./service-commands/.env
+    networks:
+      - app-network
 
   service-paiment:
     build:
@@ -169,3 +233,9 @@ services:
       - paiment-db
     env_file:
       - ./service-paiment/.env
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

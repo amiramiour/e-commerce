@@ -6,11 +6,15 @@ const { connectDB } = require('./config/db');
 const swaggerUi = require('swagger-ui-express');
 const configSwagger = require('./config/swagger-config');
 
+const cors = require('cors');
+
 const app = express();
 const PORT = process.env.PORT || 3002;
 
 app.use(bodyParser.json()); 
 app.use('/users', userRoutes);
+
+app.use(cors());
 
 // Documenter l'API avec Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(configSwagger.swaggerSpec));
